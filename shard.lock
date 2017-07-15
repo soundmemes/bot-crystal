@@ -1,0 +1,50 @@
+version: 1.0
+shards:
+  db:
+    github: crystal-lang/crystal-db
+    version: 0.4.2
+
+  dispatch:
+    github: bmulvihill/dispatch
+    commit: c6b2a4fe2a176bad1d235fdbbd947c4a59d02eb2
+
+  dotenv:
+    github: gdotdesign/cr-dotenv
+    commit: 341678090110cdb5436f75cc796c785ed392c4be
+
+  micrate:
+    github: juanedi/micrate
+    version: 0.3.0
+
+  pg:
+    github: will/crystal-pg
+    version: 0.13.3
+
+  query-builder:
+    github: izniburak/query-builder
+    commit: e36a7ec805e6444a50044af1c4611fc6089d2e72
+
+  redis:
+    github: stefanwille/crystal-redis
+    version: 1.8.0
+
+  sam:
+    github: imdrasil/sam.cr
+    version: 0.2.3
+
+  shell:
+    github: TobiasGSmollett/shell.cr
+    commit: 9844ec2d3855b7724dd00fdc68bbdf3b5095d2d2
+
+  spec2:
+    github: waterlink/spec2.cr
+    version: 0.11.0
+
+  telegram_bot:
+    github: hangyas/telegram_bot
+    commit: 9ff181972bd1f445c927f6e1d7805c3a05116038
+
+  tren:
+    github: sdogruyol/tren
+    version: 0.4.0
+
