@@ -27,7 +27,7 @@ module Soundmemes
 
       def self.recent(telegram_user_id : Int32, limit : Int32 = 10, search_query : String? = nil) : Array(Models::Sound)
         q = if search_query
-              SQL.recent(telegram_user_id, search_query, limit)
+              SQL.recent(telegram_user_id, search_query.gsub("'", "''"), limit)
             else
               SQL.recent(telegram_user_id, limit)
             end
@@ -82,7 +82,7 @@ module Soundmemes
       end
 
       def self.by_query(search_query : String, limit : Int32 = 10) : Array(Models::Sound)
-        q = SQL.by_name(search_query, limit)
+        q = SQL.by_name(search_query.gsub("'", "''"), limit)
 
         Array(Models::Sound).new.tap do |a|
           db.query_each(q) do |rs|

@@ -4,12 +4,12 @@ SELECT
   user_id,
   title,
   telegram_file_id,
-  coalesce(levenshtein(title, '{{search_query}}'), 0) AS title_distance,
-  coalesce(levenshtein(tags, '{{search_query}}'), 0) AS tags_distance
+  coalesce(levenshtein(title, '{{!search_query}}'), 0) AS title_distance,
+  coalesce(levenshtein(tags, '{{!search_query}}'), 0) AS tags_distance
 FROM
   sounds
 WHERE
-  title ILIKE '%{{search_query}}%' OR tags ILIKE '%{{search_query}}%'
+  title ILIKE '%{{!search_query}}%' OR tags ILIKE '%{{!search_query}}%'
 GROUP BY
   id
 ORDER BY
@@ -50,8 +50,8 @@ SELECT DISTINCT
   sounds.title,
   sounds.telegram_file_id,
   max(sound_postings.created_at) AS last_posted,
-  coalesce(levenshtein(title, '{{search_query}}'), 0) AS title_distance,
-  coalesce(levenshtein(tags, '{{search_query}}'), 0) AS tags_distance
+  coalesce(levenshtein(title, '{{!search_query}}'), 0) AS title_distance,
+  coalesce(levenshtein(tags, '{{!search_query}}'), 0) AS tags_distance
 FROM
   sounds
 JOIN
@@ -59,7 +59,7 @@ JOIN
 JOIN
   sound_postings ON sound_postings.sound_id = sounds.id AND sound_postings.user_id = users.id
 WHERE
-  sounds.title ILIKE '%{{search_query}}%' OR sounds.tags ILIKE '%{{search_query}}%'
+  sounds.title ILIKE '%{{!search_query}}%' OR sounds.tags ILIKE '%{{!search_query}}%'
 GROUP BY
   sounds.id
 ORDER BY
