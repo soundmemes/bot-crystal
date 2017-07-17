@@ -13,6 +13,8 @@ module Soundmemes
         end
 
         def call
+          # Ensure the user exists
+          Repositories::User.create?(result.from.not_nil!.id)
           Repositories::SoundPosting.create(result.from.not_nil!.id, result.result_id.to_i)
         end
       end
