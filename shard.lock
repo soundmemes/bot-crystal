@@ -10,7 +10,7 @@ shards:
 
   dotenv:
     github: gdotdesign/cr-dotenv
-    commit: 341678090110cdb5436f75cc796c785ed392c4be
+    version: 0.1.0
 
   micrate:
     github: juanedi/micrate
@@ -22,7 +22,7 @@ shards:
 
   query-builder:
     github: izniburak/query-builder
-    commit: e36a7ec805e6444a50044af1c4611fc6089d2e72
+    version: 1.0.0
 
   redis:
     github: stefanwille/crystal-redis
