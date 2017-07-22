@@ -51,8 +51,8 @@ module Soundmemes
         end
       end
 
-      def self.favorites(telegram_user_id : Int32) : Array(Models::Sound)
-        q = SQL.favorites(telegram_user_id)
+      def self.favorites(telegram_user_id : Int32, limit : Int32 = 10) : Array(Models::Sound)
+        q = SQL.favorites(telegram_user_id, limit)
 
         Array(Models::Sound).new.tap do |a|
           db.query_each(q) do |rs|

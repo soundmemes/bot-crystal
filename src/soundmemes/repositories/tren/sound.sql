@@ -30,7 +30,7 @@ ORDER BY
 LIMIT
   {{limit}}
 
--- name: favorites(telegram_user_id : Int32)
+-- name: favorites(telegram_user_id : Int32, limit : Int32 = 10)
 SELECT
   sounds.id,
   sounds.user_id,
@@ -42,6 +42,8 @@ JOIN
   users ON users.telegram_id = {{telegram_user_id}}
 JOIN
   favorites ON sound_id = sounds.id AND favorites.user_id = users.id
+LIMIT
+  {{limit}}
 
 -- name: recent(telegram_user_id : Int32, search_query : String, limit : Int32 = 10)
 SELECT DISTINCT
