@@ -1,8 +1,8 @@
-require "./environment"
+require "../environment"
 require "uri"
-require "./initializers/dispatch/schedule_jobs"
-require "./soundmemes/telegram_bot/bot"
-require "./soundmemes/version"
+require "../initializers/dispatch/schedule_jobs"
+require "../soundmemes/telegram_bot/bot"
+require "../soundmemes/version"
 
 Log.info("Launching Soundmemes version #{Soundmemes::VERSION}")
 
