@@ -22,7 +22,7 @@ module Soundmemes
             FROM (
               SELECT
                 sounds.id AS id,
-                COUNT(COALESCE(sound_postings.id, 0)) AS postings_count
+                COUNT(sound_postings.id) AS postings_count
               FROM
                 sounds
               LEFT OUTER JOIN
