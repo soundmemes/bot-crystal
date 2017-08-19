@@ -5,7 +5,7 @@ module Soundmemes
   module TelegramBot
     class Bot < Tele::Bot
       @@name = "Soundmemesbot"
-      @@color = :yellow
+      @@color = :cyan
 
       def handle(update)
         if message = update.message
