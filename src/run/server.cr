@@ -13,6 +13,7 @@ begin
 
   bot = Soundmemes::TelegramBot::Bot.new(
     token: ENV["BOT_API_TOKEN"],
+    host: "0.0.0.0",
     port: ENV["PORT"].to_i,
     logger: Logger.new(STDOUT).tap do |l|
       l.level = ENV["APP_ENV"] == "production" ? Logger::INFO : Logger::DEBUG

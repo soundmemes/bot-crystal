@@ -1,5 +1,5 @@
 name: soundmemes
-version: 2.0.1
+version: 2.0.2
 
 authors:
   - Vlad Faust <vladislav.faust@gmail.com>
@@ -16,7 +16,7 @@ dependencies:
     version: ~> 0.1.0
   tele:
     github: vladfaust/tele.cr
-    commit: 7b29549b87fd0ede41644f6738deba93c5b0612f
+    commit: 755bf89
   redis:
     github: stefanwille/crystal-redis
     version: ~> 1.8.0
