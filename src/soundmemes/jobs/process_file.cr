@@ -15,7 +15,7 @@ module Soundmemes
                   telegram_file_id : String,
                   sound_name : String,
                   sound_tags : String | Nil)
-        input = Tele::Client.new(ENV["BOT_API_TOKEN"], Logger.new(STDOUT).tap { |l| l.level = Logger::DEBUG }).download_file(file_id: telegram_file_id)
+        input = Tele::Client.new(ENV["BOT_API_TOKEN"]).download_file(file_id: telegram_file_id)
 
         if input && (converted = convert_to_ogg(input))
           send_message(telegram_user_id, "This is your recently added sound. Share it and have fun!")

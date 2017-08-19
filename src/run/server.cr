@@ -14,7 +14,9 @@ begin
   bot = Soundmemes::TelegramBot::Bot.new(
     token: ENV["BOT_API_TOKEN"],
     port: ENV["PORT"].to_i,
-    logger: Logger.new(STDOUT).tap { |l| l.level = Logger::DEBUG },
+    logger: Logger.new(STDOUT).tap do |l|
+      l.level = ENV["APP_ENV"] == "production" ? Logger::INFO : Logger::DEBUG
+    end,
   )
   bot.set_webhook(uri)
   bot.listen
