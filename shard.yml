@@ -1,5 +1,5 @@
 name: soundmemes
-version: 1.0.2
+version: 2.0.0
 
 authors:
   - Vlad Faust <vladislav.faust@gmail.com>
@@ -14,9 +14,9 @@ dependencies:
   dotenv:
     github: gdotdesign/cr-dotenv
     version: ~> 0.1.0
-  telegram_bot:
-    github: hangyas/telegram_bot
-    commit: 9ff181972bd1f445c927f6e1d7805c3a05116038
+  tele:
+    github: vladfaust/tele.cr
+    commit: 7b29549b87fd0ede41644f6738deba93c5b0612f
   redis:
     github: stefanwille/crystal-redis
     version: ~> 1.8.0

@@ -1,20 +1,13 @@
-require "./abstract"
 require "../../models/sound"
 require "../../repositories/sound"
+require "tele/types/inline_query_results/cached_voice"
 
 module Soundmemes
   module TelegramBot
-    module Actions
-      class InlineQuery < Abstract
-        @inline_query : ::TelegramBot::InlineQuery
-        getter :inline_query
-
+    module Handlers
+      class InlineQuery < Tele::Handlers::InlineQuery
         RECENT_LIMIT    =  3
         MAXIMUM_RESULTS = 50
-
-        def initialize(@bot : ::TelegramBot::Bot, @inline_query : ::TelegramBot::InlineQuery)
-          @inline_query = inline_query.not_nil!
-        end
 
         def call
           user_id = inline_query.from.not_nil!.id
@@ -44,7 +37,8 @@ module Soundmemes
             sounds += Repositories::Sound.by_query(search_query: inline_query.query, limit: MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
           end
 
-          results = sounds.map do |sound|
+          results = [] of Tele::Types::InlineQueryResult
+          sounds.each do |sound|
             emoji = ""
 
             case sound.querying_type
@@ -52,7 +46,7 @@ module Soundmemes
             when Models::Sound::QueryingType::Favorite then emoji = "⭐️ "
             end
 
-            ::TelegramBot::InlineQueryResultCachedVoice.new(
+            results << Tele::Types::InlineQueryResults::CachedVoice.new(
               id: sound.id.to_s,
               voice_file_id: sound.telegram_file_id.not_nil!,
               title: emoji + sound.title.not_nil! # TODO: reply_markup
@@ -60,7 +54,7 @@ module Soundmemes
           end
 
           Log.info("#{results.size} results")
-          Log.debug(results.to_json)
+          Log.debug(results.to_json) # TODO: Remove
 
           sw_text, sw_parameter = nil, nil
           case mode
@@ -80,7 +74,13 @@ module Soundmemes
             end
           end
 
-          bot.answer_inline_query inline_query.id, results, is_personal: true, cache_time: 0, switch_pm_text: sw_text, switch_pm_parameter: sw_parameter
+          answer_inline_query(
+            results: results,
+            is_personal: true,
+            cache_time: 0,
+            switch_pm_text: sw_text,
+            switch_pm_parameter: sw_parameter,
+          )
         end
       end
     end

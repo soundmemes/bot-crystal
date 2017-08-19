@@ -1,9 +1,11 @@
-require "./basic"
+require "./helpers/user_state"
 
 module Soundmemes
   module TelegramBot
-    module Actions
-      class GenericText < Basic
+    module Handlers
+      class GenericText < Tele::Handlers::Message
+        include UserState
+
         def call
           # It's guaranteed that text's not nil
           text = message.text.not_nil!
@@ -14,30 +16,30 @@ module Soundmemes
             #
             if name = validate_new_sound_name(text)
               user_state.merge_params_with({"new_sound_name" => name})
-              pp user_state.get_params
+              pp user_state.get_params # TODO: Remove
               user_state.set(US::State::AddSoundSetTags)
-              bot.send_message user_id, "Okay, now enter some comma-separated tags:"
+              send_message(text: "Okay, now enter some comma-separated tags:")
             else
-              bot.send_message user_id, "This name doesn't seem to be valid. Its length has to be #{NEW_SOUND_NAME_LENGTH} symbols and it can not contain quotes. Please, try again:"
+              send_message(text: "This name doesn't seem to be valid. Its length has to be #{NEW_SOUND_NAME_LENGTH} symbols and it can not contain quotes. Please, try again:")
             end
           when US::State::AddSoundSetTags
             # Assume the message text is a list of the new sound tags
             #
             if tags = validate_new_sound_tags(text)
               user_state.merge_params_with({"new_sound_tags" => tags})
-              pp user_state.get_params
+              pp user_state.get_params # TODO: Remove
               user_state.set(US::State::AddSoundUploadFile)
-              bot.send_message user_id, "Okay. Finally, send me the sound:"
+              send_message(text: "Okay. Finally, send me the sound:")
             else
-              bot.send_message user_id, "These tags don't seem to be valid. Their total length has to be #{NEW_SOUND_TAGS_LENGTH} symbols and they can not contain quotes.Please, try again:"
+              send_message(text: "These tags don't seem to be valid. Their total length has to be #{NEW_SOUND_TAGS_LENGTH} symbols and they can not contain quotes.Please, try again:")
             end
           when US::State::AddSoundUploadFile
             # The apps awaits for a sound file, but got text
             # TODO: Maybe generate a sound from text?
             #
-            bot.send_message user_id, "A file must be sent, not a text!"
+            send_message(text: "A file must be sent, not a text!")
           else
-            bot.send_message user_id, "Sorry, I don't understand you."
+            send_message(text: "Sorry, I don't understand you.")
           end
         end
 

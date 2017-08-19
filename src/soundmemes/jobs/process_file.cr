@@ -1,6 +1,7 @@
 require "shell"
 require "tempfile"
 require "../repositories/sound"
+require "tele/requests/send_voice"
 
 module Soundmemes
   module Jobs
@@ -10,13 +11,16 @@ module Soundmemes
       # In seconds
       MAXIMUM_SOUND_DURATION = 30
 
-      def perform(telegram_user_id : Int32, telegram_file : ::TelegramBot::Audio | ::TelegramBot::Document | ::TelegramBot::Voice, sound_name : String, sound_tags : String | Nil)
-        input = bot.download(telegram_file)
+      def perform(telegram_user_id : Int32,
+                  telegram_file_id : String,
+                  sound_name : String,
+                  sound_tags : String | Nil)
+        input = Tele::Client.new(ENV["BOT_API_TOKEN"], Logger.new(STDOUT).tap { |l| l.level = Logger::DEBUG }).download_file(file_id: telegram_file_id)
 
         if input && (converted = convert_to_ogg(input))
-          bot.send_message telegram_user_id, "This is your recently added sound. Share it and have fun!"
+          send_message(telegram_user_id, "This is your recently added sound. Share it and have fun!")
           begin
-            response = bot.send_voice(telegram_user_id, converted).not_nil!
+            response = send_voice(telegram_user_id, converted).not_nil!.as(Tele::Types::Message)
             if voice = response.voice
               file_id = voice.file_id
               Repositories::Sound.create(telegram_user_id, sound_name, sound_tags, file_id)
@@ -27,14 +31,14 @@ module Soundmemes
             File.delete(converted.path)
           end
         else
-          bot.send_message telegram_user_id, "Sorry, couldn't process your file. Please, try again with another one."
+          send_message(telegram_user_id, "Sorry, couldn't process your file. Please, try again with another one.")
         end
       end
 
-      private def convert_to_ogg(input : String) : File | Nil
+      private def convert_to_ogg(input : IO) : File | Nil
         temp = Tempfile.new("processed")
         path = temp.path
-        File.write(path, input)
+        File.write(path, input.to_slice)
         output_path = path + ".output.ogg"
 
         Log.debug("Converting #{path} (#{to_kb(File.size(path))})...")
@@ -56,8 +60,12 @@ module Soundmemes
         "#{(bytes.to_f / 10 ** 3).round(1)} KB"
       end
 
-      private def bot
-        @@bot ||= TelegramBot::Bot.new
+      private def send_message(chat_id, text)
+        Tele::Requests::SendMessage.new(chat_id: chat_id, text: text).send(ENV["BOT_API_TOKEN"])
+      end
+
+      private def send_voice(chat_id, voice)
+        Tele::Requests::SendVoice.new(chat_id: chat_id, voice: voice).send(ENV["BOT_API_TOKEN"])
       end
     end
   end

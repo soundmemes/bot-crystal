@@ -16,6 +16,10 @@ shards:
     github: juanedi/micrate
     version: 0.3.0
 
+  mime:
+    github: spalger/crystal-mime
+    version: 0.1.1
+
   pg:
     github: will/crystal-pg
     version: 0.13.3
@@ -40,9 +44,9 @@ shards:
     github: waterlink/spec2.cr
     version: 0.11.0
 
-  telegram_bot:
-    github: hangyas/telegram_bot
-    commit: 9ff181972bd1f445c927f6e1d7805c3a05116038
+  tele:
+    github: vladfaust/tele.cr
+    commit: 7b29549b87fd0ede41644f6738deba93c5b0612f
 
   tren:
     github: sdogruyol/tren
