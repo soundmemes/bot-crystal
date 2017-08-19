@@ -18,7 +18,7 @@ begin
       l.level = ENV["APP_ENV"] == "production" ? Logger::INFO : Logger::DEBUG
     end,
   )
-  bot.set_webhook(uri)
+  bot.set_webhook(uri, allowed_updates: %w(message inline_query chosen_inline_result callback_query))
   bot.listen
 ensure
   db.close
