@@ -1,7 +1,7 @@
 require "./environment"
 require "uri"
 require "./utils/logger"
-require "../initializers/dispatch/schedule_jobs"
+require "./initializers/dispatch/schedule_jobs"
 require "../soundmemes/telegram_bot/bot"
 require "../soundmemes/version"
 

@@ -21,23 +21,24 @@ module Soundmemes
                  else                         :query
                  end
 
+          repository = Repositories::Sound.new(db)
           sounds = [] of Models::Sound
           case mode
           when :empty
             # TODO: Offset
-            sounds += Repositories::Sound.recent(user_id, limit: RECENT_LIMIT).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
+            sounds += repository.recent(user_id, limit: RECENT_LIMIT).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
             limit = MAXIMUM_RESULTS - sounds.size
-            sounds += Repositories::Sound.favorites(user_id, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.map { |s| s.querying_type = Models::Sound::QueryingType::Favorite; s }
+            sounds += repository.favorites(user_id, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.map { |s| s.querying_type = Models::Sound::QueryingType::Favorite; s }
             limit = MAXIMUM_RESULTS - sounds.size
             if limit > 0
-              sounds += Repositories::Sound.popular(limit: limit).reject { |s| sounds.map(&.id).includes?(s.id) }
+              sounds += repository.popular(limit: limit).reject { |s| sounds.map(&.id).includes?(s.id) }
             end
           when :recent
-            sounds += Repositories::Sound.recent(user_id, limit: MAXIMUM_RESULTS).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
+            sounds += repository.recent(user_id, limit: MAXIMUM_RESULTS).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
           else
-            sounds += Repositories::Sound.recent(user_id, limit: RECENT_LIMIT, search_query: inline_query.query).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
+            sounds += repository.recent(user_id, limit: RECENT_LIMIT, search_query: inline_query.query).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
             # TODO: Favorites?
-            sounds += Repositories::Sound.by_query(search_query: inline_query.query, limit: MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
+            sounds += repository.by_query(search_query: inline_query.query, limit: MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
           end
 
           results = [] of Tele::Types::InlineQueryResult

@@ -1,5 +1,6 @@
 require "query-builder"
 require "../../utils/logger"
+require "../../services/db"
 
 module Soundmemes
   module Jobs

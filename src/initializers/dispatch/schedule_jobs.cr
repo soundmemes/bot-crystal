@@ -1,3 +1,4 @@
+require "./dispatch"
 require "../soundmemes/jobs/calculate_sounds_popularity"
 
 def schedule_jobs

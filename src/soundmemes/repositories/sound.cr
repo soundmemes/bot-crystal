@@ -11,8 +11,8 @@ module Soundmemes
         Tren.load("#{__DIR__}/tren/sound.sql")
       end
 
-      def self.create(telegram_user_id : Int32, title : String, tags : String | Nil, telegram_file_id : String)
-        user_id = User.by_telegram_id!(telegram_user_id).id
+      def create(telegram_user_id : Int32, title : String, tags : String | Nil, telegram_file_id : String)
+        user_id = User.new(db).by_telegram_id!(telegram_user_id).id
 
         data = {
           "user_id"          => user_id,
@@ -25,7 +25,7 @@ module Soundmemes
         db.exec(builder.table("sounds").insert(data))
       end
 
-      def self.recent(telegram_user_id : Int32, limit : Int32 = 10, search_query : String? = nil) : Array(Models::Sound)
+      def recent(telegram_user_id : Int32, limit : Int32 = 10, search_query : String? = nil) : Array(Models::Sound)
         q = if search_query
               SQL.recent(telegram_user_id, search_query.gsub("'", "''"), limit)
             else
@@ -51,7 +51,7 @@ module Soundmemes
         end
       end
 
-      def self.favorites(telegram_user_id : Int32, limit : Int32 = 10) : Array(Models::Sound)
+      def favorites(telegram_user_id : Int32, limit : Int32 = 10) : Array(Models::Sound)
         q = SQL.favorites(telegram_user_id, limit)
 
         Array(Models::Sound).new.tap do |a|
@@ -66,7 +66,7 @@ module Soundmemes
         end
       end
 
-      def self.popular(limit : Int32 = 10) : Array(Models::Sound)
+      def popular(limit : Int32 = 10) : Array(Models::Sound)
         q = SQL.by_popularity(limit)
 
         Array(Models::Sound).new.tap do |a|
@@ -81,7 +81,7 @@ module Soundmemes
         end
       end
 
-      def self.by_query(search_query : String, limit : Int32 = 10) : Array(Models::Sound)
+      def by_query(search_query : String, limit : Int32 = 10) : Array(Models::Sound)
         q = SQL.by_name(search_query.gsub("'", "''"), limit)
 
         Array(Models::Sound).new.tap do |a|

@@ -26,7 +26,7 @@ module Soundmemes
             response = send_voice(telegram_user_id, converted).not_nil!.as(Tele::Types::Message)
             if voice = response.voice
               file_id = voice.file_id
-              Repositories::Sound.create(telegram_user_id, sound_name, sound_tags, file_id)
+              Repositories::Sound.new(db).create(telegram_user_id, sound_name, sound_tags, file_id)
             else
               logger.error("Did not receive voice in response message!")
             end
