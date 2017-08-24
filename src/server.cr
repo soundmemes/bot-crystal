@@ -1,4 +1,4 @@
-require "../environment"
+require "./environment"
 require "uri"
 require "../initializers/dispatch/schedule_jobs"
 require "../soundmemes/telegram_bot/bot"
