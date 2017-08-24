@@ -7,6 +7,3 @@ require "./helpers"
 
 require "./initializers/db"
 require "./initializers/dispatch/dispatch"
-
-Log = Logger.new(STDOUT)
-Log.level = ENV["APP_ENV"] == "production" ? Logger::INFO : Logger::DEBUG

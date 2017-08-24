@@ -1,9 +1,11 @@
 require "query-builder"
+require "../../utils/logger"
 
 module Soundmemes
   module Jobs
     class CalculateSoundsPopularity
       include Dispatchable
+      include Utils::Logger
 
       POPULARITY_WINDOW = 1.day
       CALCULATE_PERIOD  = 1.hour
@@ -46,7 +48,7 @@ module Soundmemes
 
         db.exec(q)
 
-        Log.debug("Updated sound popularities")
+        logger.debug("Updated sound popularities")
 
         self.class.dispatch_in(CALCULATE_PERIOD)
       end

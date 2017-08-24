@@ -1,3 +1,4 @@
+require "../../../utils/logger"
 require "../../models/sound"
 require "../../repositories/sound"
 require "tele/types/inline_query_results/cached_voice"
@@ -6,6 +7,8 @@ module Soundmemes
   module TelegramBot
     module Handlers
       class InlineQuery < Tele::Handlers::InlineQuery
+        include Utils::Logger
+
         RECENT_LIMIT    =  3
         MAXIMUM_RESULTS = 50
 
@@ -53,8 +56,7 @@ module Soundmemes
             )
           end
 
-          Log.info("#{results.size} results")
-          Log.debug(results.to_json) # TODO: Remove
+          logger.info("#{results.size} results")
 
           sw_text, sw_parameter = nil, nil
           case mode

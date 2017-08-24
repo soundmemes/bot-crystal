@@ -1,10 +1,12 @@
 require "./environment"
 require "uri"
+require "./utils/logger"
 require "../initializers/dispatch/schedule_jobs"
 require "../soundmemes/telegram_bot/bot"
 require "../soundmemes/version"
 
-Log.info("Launching Soundmemes version #{Soundmemes::VERSION}")
+logger = Logger.new(STDOUT).tap { |l| l.level = Utils::Logger.logger_level }
+logger.info "Launching Soundmemes version #{Soundmemes::VERSION}"
 
 begin
   schedule_jobs
@@ -15,9 +17,7 @@ begin
     token: ENV["BOT_API_TOKEN"],
     host: "0.0.0.0",
     port: ENV["PORT"].to_i,
-    logger: Logger.new(STDOUT).tap do |l|
-      l.level = ENV["APP_ENV"] == "production" ? Logger::INFO : Logger::DEBUG
-    end,
+    logger: logger,
   )
   bot.set_webhook(uri, allowed_updates: %w(message inline_query chosen_inline_result callback_query))
   bot.listen

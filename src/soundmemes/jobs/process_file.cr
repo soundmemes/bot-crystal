@@ -1,5 +1,6 @@
 require "shell"
 require "tempfile"
+require "../../utils/logger"
 require "../repositories/sound"
 require "tele/requests/send_voice"
 
@@ -7,6 +8,7 @@ module Soundmemes
   module Jobs
     class ProcessFile
       include Dispatchable
+      include Utils::Logger
 
       # In seconds
       MAXIMUM_SOUND_DURATION = 30
@@ -25,7 +27,7 @@ module Soundmemes
               file_id = voice.file_id
               Repositories::Sound.create(telegram_user_id, sound_name, sound_tags, file_id)
             else
-              Log.error("Did not receive voice in response message!")
+              logger.error("Did not receive voice in response message!")
             end
           ensure
             File.delete(converted.path)
@@ -41,15 +43,15 @@ module Soundmemes
         File.write(path, input.to_slice)
         output_path = path + ".output.ogg"
 
-        Log.debug("Converting #{path} (#{to_kb(File.size(path))})...")
+        logger.debug("Converting #{path} (#{to_kb(File.size(path))})...")
         started_at = Time.now
 
         begin
           Shell.run("ffmpeg -v quiet -t #{MAXIMUM_SOUND_DURATION} -i #{path} -ar 48000 -ac 1 -acodec libopus -ab 128k #{output_path}")
-          Log.debug("Converted #{path} to #{output_path} (#{to_kb(File.size(path))} to #{to_kb(File.size(output_path))}) in #{TimeFormat.to_s(Time.now - started_at)}")
+          logger.debug("Converted #{path} to #{output_path} (#{to_kb(File.size(path))} to #{to_kb(File.size(output_path))}) in #{TimeFormat.to_s(Time.now - started_at)}")
           File.open(output_path)
         rescue ex : Exception
-          Log.error("Could not convert file #{path}!")
+          logger.error("Could not convert file #{path}!")
           nil
         ensure
           temp.unlink

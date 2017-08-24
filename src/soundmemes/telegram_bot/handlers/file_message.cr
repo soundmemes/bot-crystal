@@ -1,12 +1,14 @@
 require "./helpers/user_state"
 require "../../jobs/process_file"
 require "../keyboards/main_menu"
+require "../../../utils/logger"
 
 module Soundmemes
   module TelegramBot
     module Handlers
       class FileMessage < Tele::Handlers::Message
         include UserState
+        include Utils::Logger
 
         def call
           case user_state.get
