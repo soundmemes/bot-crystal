@@ -1,5 +1,4 @@
 require "../../../utils/logger"
-require "../../models/sound"
 require "../../repositories/sound"
 require "tele/types/inline_query_results/cached_voice"
 
@@ -12,6 +11,11 @@ module Soundmemes
         RECENT_LIMIT    =  3
         MAXIMUM_RESULTS = 50
 
+        enum QueryingType
+          Recent
+          Favorite
+        end
+
         def call
           user_id = inline_query.from.not_nil!.id
 
@@ -22,21 +26,37 @@ module Soundmemes
                  end
 
           repository = Repositories::Sound.new(db)
-          sounds = [] of Models::Sound
+          querying_types = {} of Int32 => QueryingType
+          sounds = [] of Entities::Sound
+
+          # TODO: Replace #map with #each
           case mode
           when :empty
             # TODO: Offset
-            sounds += repository.recent(user_id, limit: RECENT_LIMIT).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
+            sounds += repository.recent(user_id, limit: RECENT_LIMIT).map do |s|
+              querying_types[s.hash] = QueryingType::Recent; s
+            end
+
             limit = MAXIMUM_RESULTS - sounds.size
-            sounds += repository.favorites(user_id, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.map { |s| s.querying_type = Models::Sound::QueryingType::Favorite; s }
+
+            sounds += repository.favorites(user_id, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.map do |s|
+              querying_types[s.hash] = QueryingType::Favorite; s
+            end
+
             limit = MAXIMUM_RESULTS - sounds.size
+
             if limit > 0
               sounds += repository.popular(limit: limit).reject { |s| sounds.map(&.id).includes?(s.id) }
             end
           when :recent
-            sounds += repository.recent(user_id, limit: MAXIMUM_RESULTS).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
+            sounds += repository.recent(user_id, limit: MAXIMUM_RESULTS).map do |s|
+              querying_types[s.hash] = QueryingType::Recent; s
+            end
           else
-            sounds += repository.recent(user_id, limit: RECENT_LIMIT, search_query: inline_query.query).map { |s| s.querying_type = Models::Sound::QueryingType::Recent; s }
+            sounds += repository.recent(user_id, limit: RECENT_LIMIT, search_query: inline_query.query).map do |s|
+              querying_types[s.hash] = QueryingType::Recent; s
+            end
+
             # TODO: Favorites?
             sounds += repository.by_query(search_query: inline_query.query, limit: MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
           end
@@ -45,9 +65,9 @@ module Soundmemes
           sounds.each do |sound|
             emoji = ""
 
-            case sound.querying_type
-            when Models::Sound::QueryingType::Recent   then emoji = "🕗 "
-            when Models::Sound::QueryingType::Favorite then emoji = "⭐️ "
+            case querying_types[sound.hash]?
+            when QueryingType::Recent   then emoji = "🕗 "
+            when QueryingType::Favorite then emoji = "⭐️ "
             end
 
             results << Tele::Types::InlineQueryResults::CachedVoice.new(
