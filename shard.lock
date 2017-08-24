@@ -46,7 +46,7 @@ shards:
 
   tele:
     github: vladfaust/tele.cr
-    commit: 755bf896f627db324947594251db3be576581c24
+    commit: 5b19b860d3b1f1c77647117fe2e1fb6faed03f89
 
   tren:
     github: sdogruyol/tren
