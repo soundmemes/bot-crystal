@@ -29,18 +29,17 @@ module Soundmemes
           querying_types = {} of Int32 => QueryingType
           sounds = [] of Entities::Sound
 
-          # TODO: Replace #map with #each
           case mode
           when :empty
             # TODO: Offset
-            sounds += repository.recent(user_id, limit: RECENT_LIMIT).map do |s|
-              querying_types[s.hash] = QueryingType::Recent; s
+            sounds += repository.recent(user_id, limit: RECENT_LIMIT).tap &.each do |s|
+              querying_types[s.hash] = QueryingType::Recent
             end
 
             limit = MAXIMUM_RESULTS - sounds.size
 
-            sounds += repository.favorites(user_id, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.map do |s|
-              querying_types[s.hash] = QueryingType::Favorite; s
+            sounds += repository.favorites(user_id, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.tap &.each do |s|
+              querying_types[s.hash] = QueryingType::Favorite
             end
 
             limit = MAXIMUM_RESULTS - sounds.size
@@ -49,12 +48,12 @@ module Soundmemes
               sounds += repository.popular(limit: limit).reject { |s| sounds.map(&.id).includes?(s.id) }
             end
           when :recent
-            sounds += repository.recent(user_id, limit: MAXIMUM_RESULTS).map do |s|
-              querying_types[s.hash] = QueryingType::Recent; s
+            sounds += repository.recent(user_id, limit: MAXIMUM_RESULTS).tap &.each do |s|
+              querying_types[s.hash] = QueryingType::Recent
             end
           else
-            sounds += repository.recent(user_id, limit: RECENT_LIMIT, search_query: inline_query.query).map do |s|
-              querying_types[s.hash] = QueryingType::Recent; s
+            sounds += repository.recent(user_id, limit: RECENT_LIMIT, search_query: inline_query.query).tap &.each do |s|
+              querying_types[s.hash] = QueryingType::Recent
             end
 
             # TODO: Favorites?
