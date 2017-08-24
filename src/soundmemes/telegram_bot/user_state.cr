@@ -1,4 +1,4 @@
-require "redis"
+require "../../services/redis"
 
 module Soundmemes
   module TelegramBot
@@ -40,10 +40,6 @@ module Soundmemes
 
       def clear_params : Nil
         redis.del("soundmemes:telegram_bot:user_state:#{@telegram_id}:params") rescue nil
-      end
-
-      private def redis
-        @@redis ||= Redis.new(url: ENV["REDIS_URL"]?)
       end
 
       private def hash_from_redis_array(array : Array(Redis::RedisValue)) : Hash(String, String)
