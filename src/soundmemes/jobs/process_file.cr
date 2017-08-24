@@ -1,6 +1,7 @@
 require "shell"
 require "tempfile"
 require "../../utils/logger"
+require "../../utils/time_format"
 require "../repositories/sound"
 require "tele/requests/send_voice"
 
@@ -48,7 +49,7 @@ module Soundmemes
 
         begin
           Shell.run("ffmpeg -v quiet -t #{MAXIMUM_SOUND_DURATION} -i #{path} -ar 48000 -ac 1 -acodec libopus -ab 128k #{output_path}")
-          logger.debug("Converted #{path} to #{output_path} (#{to_kb(File.size(path))} to #{to_kb(File.size(output_path))}) in #{TimeFormat.to_s(Time.now - started_at)}")
+          logger.debug("Converted #{path} to #{output_path} (#{to_kb(File.size(path))} to #{to_kb(File.size(output_path))}) in #{Utils::TimeFormat.to_s(Time.now - started_at)}")
           File.open(output_path)
         rescue ex : Exception
           logger.error("Could not convert file #{path}!")
