@@ -4,6 +4,7 @@ module Soundmemes
   class User < Crecto::Model
     schema "users" do
       field :telegram_id, PkeyValue
+      set_updated_at_field nil
     end
 
     validate_required :telegram_id
