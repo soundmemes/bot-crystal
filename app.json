@@ -1,7 +1,7 @@
 {
   "name": "soundmemes",
   "description": "Crystal implementation of Soundmemes",
-  "website": "https://soundmemes.dokku1.vladfaust.com",
+  "website": "https://github.com/vladfaust/soundmemes.cr",
   "scripts": {
     "dokku": {
       "predeploy": "crystal sam.cr -- db:migrate:up"
