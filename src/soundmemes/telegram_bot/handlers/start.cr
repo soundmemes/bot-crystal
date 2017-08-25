@@ -1,6 +1,6 @@
 require "./helpers/user_state"
 require "./new_sound"
-require "../../repositories/user"
+require "../../repositories/users"
 
 module Soundmemes
   module TelegramBot
@@ -21,7 +21,7 @@ module Soundmemes
               user_state.set(US::State::MainMenu)
             end
 
-            new_user = Repositories::User.new(db).create?(message.from.not_nil!.id)
+            new_user = Repositories::Users.new(db).create?(message.from.not_nil!.id)
             first_name = message.from.not_nil!.first_name
             text = if new_user
                      "Welcome, %{username}!" % {username: first_name}

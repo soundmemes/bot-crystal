@@ -1,17 +1,17 @@
 require "./base"
-require "./user"
+require "./users"
 require "../entities/sound"
 
 module Soundmemes
   module Repositories
-    class Sound < Base
+    class Sounds < Base
       module SQL
         extend self
-        Tren.load("#{__DIR__}/tren/sound.sql")
+        Tren.load("#{__DIR__}/tren/sounds.sql")
       end
 
       def create(telegram_user_id : Int32, title : String, tags : String | Nil, telegram_file_id : String)
-        user_id = User.new(db).by_telegram_id!(telegram_user_id).id
+        user_id = Users.new(db).by_telegram_id!(telegram_user_id).id
 
         data = {
           "user_id"          => user_id,

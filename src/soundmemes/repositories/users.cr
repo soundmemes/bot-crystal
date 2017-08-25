@@ -2,7 +2,7 @@ require "./base"
 
 module Soundmemes
   module Repositories
-    class User < Base
+    class Users < Base
       include DB
 
       # Return true if successfully created a new user, otherwise (if the user already exists) return false

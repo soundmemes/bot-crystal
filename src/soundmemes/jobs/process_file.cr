@@ -2,7 +2,7 @@ require "shell"
 require "tempfile"
 require "../../utils/logger"
 require "../../utils/time_format"
-require "../repositories/sound"
+require "../repositories/sounds"
 require "tele/requests/send_voice"
 
 module Soundmemes
@@ -26,7 +26,7 @@ module Soundmemes
             response = send_voice(telegram_user_id, converted).not_nil!.as(Tele::Types::Message)
             if voice = response.voice
               file_id = voice.file_id
-              Repositories::Sound.new(db).create(telegram_user_id, sound_name, sound_tags, file_id)
+              Repositories::Sounds.new(db).create(telegram_user_id, sound_name, sound_tags, file_id)
             else
               logger.error("Did not receive voice in response message!")
             end

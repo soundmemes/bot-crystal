@@ -1,4 +1,4 @@
-require "../../repositories/sound_posting"
+require "../../repositories/sound_postings"
 
 module Soundmemes
   module TelegramBot
@@ -8,9 +8,9 @@ module Soundmemes
           result = update.chosen_inline_result.not_nil!
 
           # Ensure the user exists
-          Repositories::User.new(db).create?(result.from.not_nil!.id)
+          Repositories::Users.new(db).create?(result.from.not_nil!.id)
 
-          Repositories::SoundPosting.new(db).create(result.from.not_nil!.id, result.result_id.to_i)
+          Repositories::SoundPostings.new(db).create(result.from.not_nil!.id, result.result_id.to_i)
 
           nil
         end

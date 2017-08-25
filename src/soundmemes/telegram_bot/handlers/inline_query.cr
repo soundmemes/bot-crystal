@@ -1,5 +1,5 @@
 require "../../../utils/logger"
-require "../../repositories/sound"
+require "../../repositories/sounds"
 require "tele/types/inline_query_results/cached_voice"
 
 module Soundmemes
@@ -25,7 +25,7 @@ module Soundmemes
                  else                         :query
                  end
 
-          repository = Repositories::Sound.new(db)
+          repository = Repositories::Sounds.new(db)
           querying_types = {} of Int32 => QueryingType
           sounds = [] of Entities::Sound
 
