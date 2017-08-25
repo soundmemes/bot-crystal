@@ -51,12 +51,16 @@ module Soundmemes
               querying_types[s.hash] = QueryingType::Recent
             end
           else
-            sounds += Sound.recent(user, RECENT_LIMIT, query).tap &.each do |s|
-              querying_types[s.hash] = QueryingType::Recent
-            end
+            if id = /^(?:#|№|id)?(\d+)$/.match(query).try &.[1].try &.to_i
+              Repo.get(Sound, id).try { |s| sounds << s }
+            else
+              sounds += Sound.recent(user, RECENT_LIMIT, query).tap &.each do |s|
+                querying_types[s.hash] = QueryingType::Recent
+              end
 
-            # TODO: Favorites?
-            sounds += Sound.search_by_query(query, MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
+              # TODO: Favorites?
+              sounds += Sound.search_by_query(query, MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
+            end
           end
 
           results = [] of Tele::Types::InlineQueryResult
