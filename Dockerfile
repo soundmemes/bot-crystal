@@ -1,4 +1,4 @@
-FROM crystallang/crystal:0.23.0
+FROM crystallang/crystal:0.23.1
 
 # Install required packages
 RUN apt-get update && apt-get install -y ffmpeg
