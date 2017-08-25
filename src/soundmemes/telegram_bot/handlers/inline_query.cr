@@ -17,7 +17,8 @@ module Soundmemes
         end
 
         def call
-          mode = case inline_query.query.strip
+          query = inline_query.query.strip
+          mode = case query
                  when ""                 then :empty
                  when "recent", ".", "🕗" then :recent
                  else                         :query
@@ -50,12 +51,12 @@ module Soundmemes
               querying_types[s.hash] = QueryingType::Recent
             end
           else
-            sounds += Sound.recent(user, RECENT_LIMIT, inline_query.query).tap &.each do |s|
+            sounds += Sound.recent(user, RECENT_LIMIT, query).tap &.each do |s|
               querying_types[s.hash] = QueryingType::Recent
             end
 
             # TODO: Favorites?
-            sounds += Sound.search_by_query(inline_query.query, MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
+            sounds += Sound.search_by_query(query, MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
           end
 
           results = [] of Tele::Types::InlineQueryResult
@@ -86,7 +87,7 @@ module Soundmemes
             sw_parameter = Start::TOKEN_ADD_NEW_SOUND
           else
             if sounds.size > 0
-              sw_text = "🔎 Search for \"#{inline_query.query}\" (tap to add yours)"
+              sw_text = "🔎 Search for \"#{query}\" (tap to add yours)"
               sw_parameter = Start::TOKEN_ADD_NEW_SOUND
             else
               sw_text = "⚠️ Nothing found. Tap here to add your own sound"
