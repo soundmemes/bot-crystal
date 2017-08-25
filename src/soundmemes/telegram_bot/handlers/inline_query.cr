@@ -1,5 +1,5 @@
 require "../../../utils/logger"
-require "../../repositories/sounds"
+require "../../orm/models/sound"
 require "tele/types/inline_query_results/cached_voice"
 
 module Soundmemes
@@ -17,47 +17,45 @@ module Soundmemes
         end
 
         def call
-          user_id = inline_query.from.not_nil!.id
-
           mode = case inline_query.query.strip
                  when ""                 then :empty
                  when "recent", ".", "🕗" then :recent
                  else                         :query
                  end
 
-          repository = Repositories::Sounds.new(db)
-          querying_types = {} of Int32 => QueryingType
-          sounds = [] of Entities::Sound
+          querying_types = {} of UInt64 => QueryingType
+          sounds = [] of Sound
+          user = User.new.tap &.telegram_id = inline_query.from.not_nil!.id
 
           case mode
           when :empty
             # TODO: Offset
-            sounds += repository.recent(user_id, limit: RECENT_LIMIT).tap &.each do |s|
+            sounds += Sound.recent(user, RECENT_LIMIT).tap &.each do |s|
               querying_types[s.hash] = QueryingType::Recent
             end
 
             limit = MAXIMUM_RESULTS - sounds.size
 
-            sounds += repository.favorites(user_id, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.tap &.each do |s|
+            sounds += Sound.favorites(user, limit).reject { |s| sounds.map(&.id).includes?(s.id) }.tap &.each do |s|
               querying_types[s.hash] = QueryingType::Favorite
             end
 
             limit = MAXIMUM_RESULTS - sounds.size
 
             if limit > 0
-              sounds += repository.popular(limit: limit).reject { |s| sounds.map(&.id).includes?(s.id) }
+              sounds += Sound.popular(limit, %w(id telegram_file_id title)).reject { |s| sounds.map(&.id).includes?(s.id) }
             end
           when :recent
-            sounds += repository.recent(user_id, limit: MAXIMUM_RESULTS).tap &.each do |s|
+            sounds += Sound.recent(user, MAXIMUM_RESULTS).tap &.each do |s|
               querying_types[s.hash] = QueryingType::Recent
             end
           else
-            sounds += repository.recent(user_id, limit: RECENT_LIMIT, search_query: inline_query.query).tap &.each do |s|
+            sounds += Sound.recent(user, RECENT_LIMIT, inline_query.query).tap &.each do |s|
               querying_types[s.hash] = QueryingType::Recent
             end
 
             # TODO: Favorites?
-            sounds += repository.by_query(search_query: inline_query.query, limit: MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
+            sounds += Sound.search_by_query(inline_query.query, MAXIMUM_RESULTS - sounds.size).reject { |s| sounds.map(&.id).includes?(s.id) }
           end
 
           results = [] of Tele::Types::InlineQueryResult

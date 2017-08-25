@@ -1,4 +1,3 @@
-require "query-builder"
 require "../../utils/logger"
 require "../../services/db"
 
@@ -12,9 +11,16 @@ module Soundmemes
       CALCULATE_PERIOD  = 1.hour
 
       def perform
-        q = Query::Builder.new.table("sound_postings").where("created_at", ">", Time.now - POPULARITY_WINDOW).select("count(sound_postings.id)").get
+        q = <<-SQL
+          SELECT
+            COUNT(id)
+          FROM
+            sound_postings
+          WHERE
+            created_at > $1
+        SQL
 
-        total = db.query_one(q, as: {Int64}).to_f
+        total = db.query_one(q, Time.now - POPULARITY_WINDOW, as: {Int64}).to_f
 
         if total > 0
           q = <<-'SQL'
