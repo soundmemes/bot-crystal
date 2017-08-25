@@ -1,27 +1,15 @@
-# soundmemesbot
+# [@soundmemesbot](https://t.me/soundmemesbot)
 
-TODO: Write a description here
+**Pavel Durov says in his Twitter: [it's the best Telegram bot ever!](https://www.youtube.com/watch?v=dQw4w9WgXcQ)**
 
-## Installation
+Rickroll your friends! Just type `@soundmemesbot rickroll` **anywhere** in Telegram! There are thousands of sounds to choose from!
 
-TODO: Write installation instructions here
+### Technologies used
 
-## Usage
+Written in [Crystal](https://crystal-lang.org/) - the best programming Language *ever* invented by a human being.
 
-TODO: Write usage instructions here
+Uses my own Telegram framework [tele.cr](https://github.com/vladfaust/tele.cr).
 
-## Development
+### Stats
 
-TODO: Write development instructions here
-
-## Contributing
-
-1. Fork it ( https://github.com/[your-github-name]/soundmemesbot/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
-
-## Contributors
-
-- [[your-github-name]](https://github.com/[your-github-name]) Vlad Faust - creator, maintainer
+As for 26/08/17, the bot has **97k** users & **526k** unique sound posts.
