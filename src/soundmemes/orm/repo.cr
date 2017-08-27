@@ -13,3 +13,5 @@ module Soundmemes
     end
   end
 end
+
+Crecto::DbLogger.set_handler(STDOUT) unless ENV["APP_ENV"] == "production"
