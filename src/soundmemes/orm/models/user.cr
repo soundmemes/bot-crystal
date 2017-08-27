@@ -5,6 +5,8 @@ module Soundmemes
     schema "users" do
       field :telegram_id, PkeyValue
       set_updated_at_field nil
+      has_many :sounds, Sound
+      has_many :posts, SoundPost
     end
 
     validate_required :telegram_id

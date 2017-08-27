@@ -10,6 +10,6 @@ module Soundmemes
       field :telegram_message_id, PkeyValue
     end
 
-    validate_required [:user, :sound]
+    validate_required [:user_id, :sound_id]
   end
 end

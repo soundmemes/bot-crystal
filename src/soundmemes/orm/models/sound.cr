@@ -10,9 +10,10 @@ module Soundmemes
       field :tags, String
       field :telegram_file_id, String
       field :popularity, Float32
+      has_many :posts, SoundPost
     end
 
-    validate_required [:user, :title, :telegram_file_id]
+    validate_required [:user_id, :title, :telegram_file_id]
 
     def self.recent(user : User, limit : Int32, search_query : String? = nil)
       query = ""
