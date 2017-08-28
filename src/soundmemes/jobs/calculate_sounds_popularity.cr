@@ -7,6 +7,8 @@ module Soundmemes
       include Dispatchable
       include Utils::Logger
 
+      @@logger_progname = "JOB"
+
       POPULARITY_WINDOW = 1.day
       CALCULATE_PERIOD  = 1.hour
 

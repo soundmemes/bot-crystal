@@ -11,6 +11,8 @@ module Soundmemes
       include Dispatchable
       include Utils::Logger
 
+      @@logger_progname = "JOB"
+
       # In seconds
       MAXIMUM_SOUND_DURATION = 30
 

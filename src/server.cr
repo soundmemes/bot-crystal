@@ -7,6 +7,7 @@ require "../soundmemes/version"
 
 class Server
   include Utils::Logger
+  @@logger_progname = "SERVER"
 
   def initialize(bot_api_token token, host, port, @webhook_host : URI)
     @bot = Soundmemes::TelegramBot::Bot.new(token, port, logger, host: host)
