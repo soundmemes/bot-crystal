@@ -10,6 +10,7 @@ module Soundmemes
       field :tags, String
       field :telegram_file_id, String
       field :popularity, Float32
+      field :posts_count, PkeyValue, virtual: true
       has_many :posts, SoundPost
     end
 
