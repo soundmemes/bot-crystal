@@ -18,6 +18,8 @@ module Soundmemes
               Handlers::NewSound
             when "/cancel"
               Handlers::Cancel
+            when Handlers::SoundById::REGEXPS.find &.match(text)
+              Handlers::SoundById
             else
               Handlers::GenericText
             end
