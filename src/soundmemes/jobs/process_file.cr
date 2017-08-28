@@ -63,11 +63,11 @@ module Soundmemes
       end
 
       private def send_message(chat_id, text)
-        Tele::Requests::SendMessage.new(chat_id: chat_id, text: text).send(ENV["BOT_API_TOKEN"])
+        Tele::Requests::SendMessage.new(chat_id: chat_id, text: text).send(ENV["BOT_API_TOKEN"], logger)
       end
 
       private def send_voice(chat_id, voice)
-        Tele::Requests::SendVoice.new(chat_id: chat_id, voice: voice).send(ENV["BOT_API_TOKEN"])
+        Tele::Requests::SendVoice.new(chat_id: chat_id, voice: voice).send(ENV["BOT_API_TOKEN"], logger)
       end
     end
   end
