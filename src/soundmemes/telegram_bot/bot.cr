@@ -32,6 +32,11 @@ module Soundmemes
           Handlers::InlineQuery
         elsif chosen_inline_result = update.chosen_inline_result
           Handlers::ChosenInlineResult
+        elsif callback_query = update.callback_query
+          case callback_query.data
+          when Keyboards::SoundManagementMenu::FAVORITE_REGEX
+            Handlers::CallbackQuery::SwitchFavorite
+          end
         end
       end
     end

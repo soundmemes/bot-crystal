@@ -42,12 +42,15 @@ module Soundmemes
             end
           else
             if message.voice
-              sound = Repo.get_by(Sound, telegram_file_id: message.voice.not_nil!.file_id)
+              sounds = Repo.all(Sound, Query.where(telegram_file_id: message.voice.not_nil!.file_id).preload(:user))
 
-              if sound
+              if sounds.size > 0 && (sound = sounds.first)
+                in_favorites? = !!Repo.get_by(Favorite, user_id: sound.user.id, sound_id: sound.id)
+
                 send_message(
                   text: sound_information(sound),
                   parse_mode: "HTML",
+                  reply_markup: Keyboards::SoundManagementMenu.new(sound.id.as(Int32), in_favorites?).to_type
                 )
               else
                 send_message(text: "Could not find this sound in the Database. Consider adding it yourself: /new")
