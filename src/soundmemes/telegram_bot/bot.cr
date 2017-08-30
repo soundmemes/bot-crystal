@@ -1,5 +1,6 @@
 require "tele"
 require "./handlers/**"
+require "./keyboards/main_menu"
 
 module Soundmemes
   module TelegramBot
@@ -14,12 +15,18 @@ module Soundmemes
             case text
             when /\/start(.+)?/
               Handlers::Start
-            when "/new"
+            when "/new", Keyboards::MainMenu::BUTTON_NEW_SOUND
               Handlers::NewSound
             when "/cancel"
               Handlers::Cancel
             when Handlers::SoundById::REGEXPS.find &.match(text)
               Handlers::SoundById
+            when Keyboards::MainMenu::BUTTON_FAVORITES
+              Handlers::Lists::Favorites
+            when Keyboards::MainMenu::BUTTON_POPULAR
+              Handlers::Lists::Popular
+            when Keyboards::MainMenu::BUTTON_MY_SOUNDS
+              Handlers::Lists::My
             else
               Handlers::GenericText
             end
@@ -36,6 +43,12 @@ module Soundmemes
           case callback_query.data
           when Keyboards::SoundManagementMenu::FAVORITE_REGEX
             Handlers::CallbackQuery::SwitchFavorite
+          when Handlers::Lists::Favorites.regex
+            Handlers::Lists::Favorites
+          when Handlers::Lists::Popular.regex
+            Handlers::Lists::Popular
+          when Handlers::Lists::My.regex
+            Handlers::Lists::My
           end
         end
       end
