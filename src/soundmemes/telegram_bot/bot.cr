@@ -27,6 +27,8 @@ module Soundmemes
               Handlers::Lists::Popular
             when Keyboards::MainMenu::BUTTON_MY_SOUNDS
               Handlers::Lists::My
+            when Keyboards::MainMenu::BUTTON_MORE
+              Handlers::AdditionalInformation
             else
               Handlers::GenericText
             end
