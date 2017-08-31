@@ -29,6 +29,8 @@ module Soundmemes
               Handlers::Lists::My
             when Keyboards::MainMenu::BUTTON_MORE
               Handlers::AdditionalInformation
+            when Keyboards::MainMenu::BUTTON_DONATE, "/donate"
+              Handlers::Donate
             else
               Handlers::GenericText
             end

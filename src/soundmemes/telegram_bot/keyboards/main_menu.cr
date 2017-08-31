@@ -9,7 +9,7 @@ module Soundmemes
         BUTTON_MY_SOUNDS = "🌝 My sounds"
         BUTTON_NEW_SOUND = "⚡️ Add sound"
         BUTTON_MORE      = "👀 Information"
-        BUTTON_DONATE    = "☕️ Buy coffee"
+        BUTTON_DONATE    = "☕️ Buy a coffee"
 
         def initialize
           @buttons.push([Button.new(BUTTON_FAVORITES), Button.new(BUTTON_POPULAR)])
