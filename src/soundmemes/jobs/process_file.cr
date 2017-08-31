@@ -32,7 +32,7 @@ module Soundmemes
               logger.error("Did not receive voice in response message!")
             end
           ensure
-            File.delete(converted.path)
+            # File.delete(converted.path)
           end
         else
           send_message(telegram_user_id, "Sorry, couldn't process your file. Please, try again with another one.")

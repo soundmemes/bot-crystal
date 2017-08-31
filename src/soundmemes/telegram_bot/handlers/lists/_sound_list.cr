@@ -29,7 +29,7 @@ module Soundmemes
 
         def call
           if message = update.message
-            @user = Repo.get_by(User, telegram_id: message.from.not_nil!.id).not_nil!
+            @user = User.find_or_create(telegram_id: message.from.not_nil!.id)
             preload_data
 
             R::SendMessage.new(
@@ -42,7 +42,7 @@ module Soundmemes
             page = self.class.regex.match(callback_query.data.not_nil!).try &.[1].to_i
             raise MalformedQueryError.new unless page
 
-            @user = Repo.get_by(User, telegram_id: callback_query.from.id).not_nil!
+            @user = User.find_or_create(callback_query.from.id)
             preload_data(page)
 
             [
