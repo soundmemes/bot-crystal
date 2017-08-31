@@ -1,5 +1,5 @@
 require "../../utils/logger"
-require "../../services/db"
+require "../orm/models/sound_post"
 
 module Soundmemes
   module Jobs
@@ -13,23 +13,16 @@ module Soundmemes
       CALCULATE_PERIOD  = 1.hour
 
       def perform
-        q = <<-SQL
-          SELECT
-            COUNT(id)
-          FROM
-            sound_postings
-          WHERE
-            created_at > $1
-        SQL
+        since = Time.now - POPULARITY_WINDOW
 
-        total = db.query_one(q, Time.now - POPULARITY_WINDOW, as: {Int64}).to_f
+        total = Repo.aggregate(SoundPost, :count, :id, Query.where("created_at > ?", [since])).as(Int64)
 
         if total > 0
           q = <<-'SQL'
             UPDATE
               sounds
             SET
-              popularity = sq.postings_count / {{total}}
+              popularity = sq.postings_count / ?
             FROM (
               SELECT
                 sounds.id AS id,
@@ -38,6 +31,8 @@ module Soundmemes
                 sounds
               LEFT OUTER JOIN
                 sound_postings ON sound_postings.sound_id = sounds.id
+              WHERE
+                sound_postings.created_at > ?
               GROUP BY
                 sounds.id
             ) AS sq
@@ -45,7 +40,7 @@ module Soundmemes
               sounds.id = sq.id
           SQL
 
-          q = q.gsub("{{total}}", total)
+          Repo.query(q, [total, since])
         else
           q = <<-'SQL'
             UPDATE
@@ -53,11 +48,11 @@ module Soundmemes
             SET
               popularity = 0
           SQL
+
+          Repo.query(q)
         end
 
-        db.exec(q)
-
-        logger.debug("Updated sound popularities")
+        logger.info("Updated sound popularities (total posts in last day: #{total})")
 
         self.class.dispatch_in(CALCULATE_PERIOD)
       end
