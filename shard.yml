@@ -16,7 +16,7 @@ dependencies:
     version: ~> 0.1.0
   tele:
     github: vladfaust/tele.cr
-    version: ~> 0.1.0
+    version: ~> 0.1.1
   redis:
     github: stefanwille/crystal-redis
     version: ~> 1.8.0
