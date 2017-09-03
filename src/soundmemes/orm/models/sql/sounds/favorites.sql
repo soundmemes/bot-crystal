@@ -1,9 +1,6 @@
 -- name: favorites(telegram_user_id : PkeyValue, limit : Int32, offset : Int32)
 SELECT
-  sounds.id AS id,
-  sounds.user_id AS user_id,
-  sounds.title AS title,
-  sounds.telegram_file_id AS telegram_file_id
+  sounds.*
 FROM
   sounds
 JOIN
