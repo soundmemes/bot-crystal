@@ -44,7 +44,7 @@ module Soundmemes
             limit = MAXIMUM_RESULTS - sounds.size
 
             if limit > 0
-              sounds += Sound.popular(limit, %w(id telegram_file_id title)).reject { |s| sounds.map(&.id).includes?(s.id) }
+              sounds += Sound.popular(limit).reject { |s| sounds.map(&.id).includes?(s.id) }
             end
           when :recent
             sounds += Sound.recent(user, MAXIMUM_RESULTS).tap &.each do |s|

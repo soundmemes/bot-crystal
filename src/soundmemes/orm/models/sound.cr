@@ -26,8 +26,8 @@ module Soundmemes
       Repo.query(self, query)
     end
 
-    def self.popular(limit : Int32, select selects : Array(String) = ["*"], offset : Int32 = 0)
-      Repo.all(self, Query.select(selects).order_by("coalesce(popularity, 0) DESC").limit(limit).offset(offset)).as(Array(self))
+    def self.popular(limit : Int32, offset : Int32 = 0)
+      Repo.all(self, Query.order_by("COALESCE(popularity, 0) DESC").limit(limit).offset(offset)).as(Array(self))
     end
 
     def self.favorites(user : User, limit : Int32, offset : Int32 = 0)

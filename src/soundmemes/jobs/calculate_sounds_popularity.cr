@@ -22,7 +22,7 @@ module Soundmemes
             UPDATE
               sounds
             SET
-              popularity = sq.postings_count / ?
+              popularity = sq.postings_count / ?::REAL
             FROM (
               SELECT
                 sounds.id AS id,
