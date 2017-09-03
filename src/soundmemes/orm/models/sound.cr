@@ -10,9 +10,13 @@ module Soundmemes
       field :tags, String
       field :telegram_file_id, String
       field :popularity, Float32
-      field :posts_count, PkeyValue, virtual: true
+      field :agg_postings_count, Int32
       has_many :posts, SoundPost
     end
+
+    # def posts_count
+    #   agg_postings_count
+    # end
 
     validate_required [:user_id, :title, :telegram_file_id]
 
@@ -27,7 +31,7 @@ module Soundmemes
     end
 
     def self.popular(limit : Int32, offset : Int32 = 0)
-      Repo.all(self, Query.order_by("COALESCE(popularity, 0) DESC").limit(limit).offset(offset)).as(Array(self))
+      Repo.all(self, Query.order_by("COALESCE(popularity, 0) DESC").order_by("agg_postings_count DESC").limit(limit).offset(offset)).as(Array(self))
     end
 
     def self.favorites(user : User, limit : Int32, offset : Int32 = 0)

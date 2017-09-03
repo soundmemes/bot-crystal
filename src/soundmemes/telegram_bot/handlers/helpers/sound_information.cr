@@ -11,7 +11,6 @@ module Soundmemes::TelegramBot::Handlers
     # The resulting request should have {parse_mode: "HTML"}
     def sound_information(sound : Sound, information_variant : SoundInfoVariant = SoundInfoVariant::Full) : String
       sound.user = Repo.get(User, sound.user_id) unless sound.user?
-      sound.posts_count ||= Repo.aggregate(SoundPost, :count, :id, Query.where(sound_id: sound.id)).as(Int64)
 
       case information_variant
       when SoundInfoVariant::Full
@@ -20,14 +19,14 @@ module Soundmemes::TelegramBot::Handlers
           author:       "<a href=\"tg://user?id=%s\">this memer</a>" % sound.user.telegram_id,
           id:           sound.id,
           tags:         sound.tags,
-          usages_count: sound.posts_count,
+          usages_count: sound.agg_postings_count,
         }
       else
         "<b>%{title}</b> (/%{id})\nby %{author}\n%{usages_count} total usage(s)" % {
           id:           sound.id,
           title:        escape_string(sound.title.not_nil!),
           author:       "<a href=\"tg://user?id=%s\">this memer</a>" % sound.user.telegram_id,
-          usages_count: sound.posts_count,
+          usages_count: sound.agg_postings_count,
         }
       end
     end
