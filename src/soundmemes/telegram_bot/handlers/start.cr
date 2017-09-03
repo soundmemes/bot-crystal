@@ -7,6 +7,7 @@ module Soundmemes
     module Handlers
       class Start < Tele::Handlers::Message
         include UserState
+        include Utils::Logger
 
         TOKEN_ADD_NEW_SOUND = "add_new_sound"
 
@@ -21,14 +22,21 @@ module Soundmemes
               user_state.set(US::State::MainMenu)
             end
 
-            new_user = User.find_or_create(message.from.not_nil!.id)
+            user = User.find_or_create(message.from.not_nil!.id)
             first_name = message.from.not_nil!.first_name
-            text = if new_user
-                     "Welcome, %{username}!" % {username: first_name}
-                   else
-                     "Hello, %{username}" % {username: first_name}
-                   end
 
+            user.telegram_first_name = first_name
+            user.telegram_last_name = message.from.not_nil!.last_name
+            user.telegram_username = message.from.not_nil!.username
+
+            changeset = User.changeset(user)
+            if changeset.valid?
+              Repo.update(changeset)
+            else
+              logger.error("Invalid User changeset: #{changeset.errors}")
+            end
+
+            text = "Hello, %{username}" % {username: first_name}
             send_message(text: text, reply_markup: Keyboards::MainMenu.new.to_type)
           end
         end
