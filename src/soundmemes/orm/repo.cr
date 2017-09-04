@@ -8,8 +8,7 @@ module Soundmemes
     extend Crecto::Repo
 
     config do |conf|
-      conf.adapter = Crecto::Adapters::Postgres
-      conf.uri = ENV["DATABASE_URL"]
+      conf.crecto_db = db
     end
   end
 end

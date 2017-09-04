@@ -2,7 +2,7 @@ version: 1.0
 shards:
   crecto:
     github: fridgerator/crecto
-    version: 0.6.2
+    commit: f888e05cb119a4506d0432dd34cafd3ff339299b
 
   db:
     github: crystal-lang/crystal-db
