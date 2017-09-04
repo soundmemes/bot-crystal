@@ -1,5 +1,5 @@
 require "../../utils/logger"
-require "../orm/repo"
+require "../../services/db"
 
 module Soundmemes
   module Jobs
@@ -32,7 +32,7 @@ module Soundmemes
             sounds.id = sq.id
         SQL
 
-        Repo.query(q)
+        db.exec(q)
         logger.debug("Updated sounds posts count")
 
         self.class.dispatch_in(CALCULATE_PERIOD)

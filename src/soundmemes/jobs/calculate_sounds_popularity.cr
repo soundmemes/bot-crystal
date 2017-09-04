@@ -22,7 +22,7 @@ module Soundmemes
             UPDATE
               sounds
             SET
-              popularity = sq.postings_count / ?::REAL
+              popularity = sq.postings_count / $1::REAL
             FROM (
               SELECT
                 sounds.id AS id,
@@ -32,7 +32,7 @@ module Soundmemes
               LEFT OUTER JOIN
                 sound_postings ON sound_postings.sound_id = sounds.id
               WHERE
-                sound_postings.created_at > ?
+                sound_postings.created_at > $2
               GROUP BY
                 sounds.id
             ) AS sq
@@ -40,7 +40,7 @@ module Soundmemes
               sounds.id = sq.id
           SQL
 
-          Repo.query(q, [total, since])
+          db.query(q, total, since)
         else
           q = <<-'SQL'
             UPDATE
@@ -49,7 +49,7 @@ module Soundmemes
               popularity = 0
           SQL
 
-          Repo.query(q)
+          db.query(q)
         end
 
         logger.info("Updated sound popularities (total posts in last day: #{total})")
