@@ -20,9 +20,10 @@ module Soundmemes
             # TODO: If the file is Voice, process immideately
             if message.audio || message.voice || message.document
               params = user_state.get_params
+              return send_message(text: "It's not a right time to send an attachment.") unless params["new_sound_name"]?
 
-              tags = params["new_sound_tags"]
-              tags = nil unless tags.size > 0
+              tags = params["new_sound_tags"]?
+              tags = nil unless tags.try &.size.> 0
 
               # OPTIMIZE: What the heck? Refer to https://github.com/crystal-lang/crystal/issues/2661
               {% for t in ["audio", "voice", "document"] %}
