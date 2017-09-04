@@ -34,7 +34,7 @@ module Soundmemes
 
             R::SendMessage.new(
               chat_id: message.from.not_nil!.id,
-              text: render_sounds,
+              text: @sounds.any? ? render_sounds : no_sounds_message,
               parse_mode: "HTML",
               reply_markup: reply_markup,
             )
@@ -61,6 +61,10 @@ module Soundmemes
         rescue MalformedQueryError
           logger.warn("Malformed callback query: #{callback_query.not_nil!.data}")
           nil
+        end
+
+        private def no_sounds_message : String
+          "There are currently no sounds right here."
         end
 
         private def render_sounds : String
