@@ -1,6 +1,8 @@
 require "tren"
 require "../repo"
 require "./user"
+require "./sound_post"
+require "./favorite"
 
 module Soundmemes
   class Sound < Crecto::Model
@@ -12,6 +14,7 @@ module Soundmemes
       field :popularity, Float32
       field :agg_postings_count, Int32
       has_many :posts, SoundPost
+      has_many :favorites, Favorite
     end
 
     # def posts_count

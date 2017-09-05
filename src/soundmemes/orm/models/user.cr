@@ -1,4 +1,7 @@
 require "../repo"
+require "./sound"
+require "./sound_post"
+require "./favorite"
 
 module Soundmemes
   class User < Crecto::Model
@@ -10,6 +13,7 @@ module Soundmemes
       set_updated_at_field nil
       has_many :sounds, Sound
       has_many :posts, SoundPost
+      has_many :favorites, Favorite
     end
 
     validate_required :telegram_id
