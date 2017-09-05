@@ -7,6 +7,8 @@ authors:
 targets:
   server:
     main: src/server.cr
+  broadcaster:
+    main: src/broadcaster.cr
 
 crystal: 0.23.0
 
@@ -17,6 +19,9 @@ dependencies:
   tele:
     github: vladfaust/tele.cr
     version: ~> 0.1.1
+  tele-broadcast:
+    github: vladfaust/tele-broadcast.cr
+    version: ~> 0.1.2
   redis:
     github: stefanwille/crystal-redis
     version: ~> 1.8.0

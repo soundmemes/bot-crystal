@@ -48,6 +48,10 @@ shards:
     github: vladfaust/tele.cr
     version: 0.1.1
 
+  tele-broadcast:
+    github: vladfaust/tele-broadcast.cr
+    version: 0.1.2
+
   tren:
     github: sdogruyol/tren
     version: 0.4.0
