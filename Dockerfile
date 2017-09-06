@@ -8,6 +8,3 @@ WORKDIR /app/
 ADD . /app
 ARG APP_ENV=production
 RUN shards build --production
-
-# Run the app
-CMD "bin/server"
