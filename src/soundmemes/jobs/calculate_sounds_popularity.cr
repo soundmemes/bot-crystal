@@ -40,7 +40,7 @@ module Soundmemes
               sounds.id = sq.id
           SQL
 
-          db.query(q, total, since)
+          db.exec(q, total, since)
         else
           q = <<-'SQL'
             UPDATE
@@ -49,7 +49,7 @@ module Soundmemes
               popularity = 0
           SQL
 
-          db.query(q)
+          db.exec(q)
         end
 
         logger.info("Updated sound popularities (total posts in last day: #{total})")
