@@ -29,8 +29,8 @@ dependencies:
     github: TobiasGSmollett/shell.cr
     commit: 9844ec2d3855b7724dd00fdc68bbdf3b5095d2d2
   crecto:
-    github: fridgerator/crecto
-    commit: f888e05cb119a4506d0432dd34cafd3ff339299b
+    github: vladfaust/crecto
+    branch: fix-114
   pg:
     github: will/crystal-pg
     version: ~> 0.13.3
