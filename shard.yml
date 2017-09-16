@@ -18,10 +18,10 @@ dependencies:
     version: ~> 0.1.0
   tele:
     github: vladfaust/tele.cr
-    version: ~> 0.1.1
+    version: ~> 0.1.2
   tele-broadcast:
     github: vladfaust/tele-broadcast.cr
-    version: ~> 0.1.2
+    version: ~> 0.1.3
   redis:
     github: stefanwille/crystal-redis
     version: ~> 1.8.0
