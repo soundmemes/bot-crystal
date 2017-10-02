@@ -10,5 +10,3 @@ end
 def db
   Services::DB.instance
 end
-
-at_exit { Services::DB.instance.close }
