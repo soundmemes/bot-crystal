@@ -14,16 +14,16 @@ module Soundmemes
       end
 
       def set(state new_state : State) : Nil
-        redis.set("soundmemes:telegram_bot:user_state:#{@telegram_id}", new_state.value) rescue nil
+        redis &.set("soundmemes:telegram_bot:user_state:#{@telegram_id}", new_state.value) rescue nil
       end
 
       def get : State
-        value = redis.get("soundmemes:telegram_bot:user_state:#{@telegram_id}").try &.to_i rescue nil
+        value = redis &.get("soundmemes:telegram_bot:user_state:#{@telegram_id}").try &.to_i rescue nil
         value ? State.new(value) : State::MainMenu
       end
 
       def get_params : Hash(String, String)
-        array = redis.hgetall("soundmemes:telegram_bot:user_state:#{@telegram_id}:params") rescue nil
+        array = redis &.hgetall("soundmemes:telegram_bot:user_state:#{@telegram_id}:params") rescue nil
         array ? hash_from_redis_array(array) : Hash(String, String).new
       end
 
@@ -35,11 +35,11 @@ module Soundmemes
       end
 
       def set_params(params : Hash)
-        redis.hmset("soundmemes:telegram_bot:user_state:#{@telegram_id}:params", params) rescue nil
+        redis &.hmset("soundmemes:telegram_bot:user_state:#{@telegram_id}:params", params) rescue nil
       end
 
       def clear_params : Nil
-        redis.del("soundmemes:telegram_bot:user_state:#{@telegram_id}:params") rescue nil
+        redis &.del("soundmemes:telegram_bot:user_state:#{@telegram_id}:params") rescue nil
       end
 
       private def hash_from_redis_array(array : Array(Redis::RedisValue)) : Hash(String, String)
