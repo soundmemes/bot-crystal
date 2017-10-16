@@ -10,7 +10,7 @@ class Server
   @@logger_progname = "SERVER"
 
   def initialize(bot_api_token token, host, port, @webhook_host : URI)
-    @bot = Soundmemes::TelegramBot::Bot.new(token, port, logger, host: host)
+    @bot = Soundmemes::TelegramBot::Bot.new(token, port, logger, host: host, rescue: ENV["APP_ENV"] == "production")
   end
 
   def run
