@@ -18,7 +18,7 @@ dependencies:
     version: ~> 0.1.0
   tele:
     github: vladfaust/tele.cr
-    version: ~> 0.1.2
+    version: ~> 0.1.4
   tele-broadcast:
     github: vladfaust/tele-broadcast.cr
     version: ~> 0.1.3
